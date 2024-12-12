@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 /*
@@ -95,6 +96,7 @@ func evaluateRow(row []int, level int) bool {
 // > 478 and < 653
 // not OK 465
 func main() {
+	start := time.Now()
 	rows := parseInput("input.txt")
 	count := 0
 	for _, row := range rows {
@@ -103,4 +105,6 @@ func main() {
 		}
 	}
 	fmt.Println("valid: ", count)
+	since := time.Since(start)
+	fmt.Println("finished in: ", since)
 }
