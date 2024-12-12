@@ -58,7 +58,13 @@ func parseInput(filepath string) [][]int {
 	return numbers
 }
 
-func evaluateRow(row []int) bool {
+func removeIndex(s []int, index int) []int {
+	ret := make([]int, 0)
+	ret = append(ret, s[:index]...)
+	return append(ret, s[index+1:]...)
+}
+
+func evaluateRow(row []int, level int) bool {
 	ret := false
 	increasing := row[0] < row[1]
 	for i := 0; i < len(row)-1; i++ {
@@ -66,20 +72,35 @@ func evaluateRow(row []int) bool {
 		if row[i] != row[j] && (row[i] < row[j] && row[j]-row[i] < 4 && increasing || !increasing && row[i] > row[j] && row[i]-row[j] < 4) {
 			ret = true
 		} else {
-			return false
+			if level > 0 {
+				fmt.Println("NOT going deeper")
+				return false // if we are already in a bad level, we can't go deeper
+			}
+			row2 := removeIndex(row, j) // because we start from 0, it transaltes to i+1 in the array
+			ret2 := evaluateRow(row2, level+1)
+			if !ret2 {
+				row2 := removeIndex(row, i) // because we start from 0, it transaltes to i+1 in the array
+				ret2 = evaluateRow(row2, level+1)
+			}
+			if !ret2 {
+				row2 := removeIndex(row, 0) // because we start from 0, it transaltes to i+1 in the array
+				ret2 = evaluateRow(row2, level+1)
+			}
+			return ret2
 		}
 	}
 	return ret
 }
 
+// > 478 and < 653
+// not OK 465
 func main() {
 	rows := parseInput("input.txt")
 	count := 0
 	for _, row := range rows {
-		if evaluateRow(row) {
-			fmt.Println(row)
+		if evaluateRow(row, 0) {
 			count++
 		}
 	}
-	fmt.Println(count)
+	fmt.Println("valid: ", count)
 }
