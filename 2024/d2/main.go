@@ -60,7 +60,7 @@ func parseInput(filepath string) [][]int {
 }
 
 func removeIndex(s []int, index int) []int {
-	ret := make([]int, 0)
+	ret := make([]int, 0, len(s)-1)
 	ret = append(ret, s[:index]...)
 	return append(ret, s[index+1:]...)
 }
@@ -74,7 +74,6 @@ func evaluateRow(row []int, level int) bool {
 			ret = true
 		} else {
 			if level > 0 {
-				fmt.Println("NOT going deeper")
 				return false // if we are already in a bad level, we can't go deeper
 			}
 			row2 := removeIndex(row, j) // because we start from 0, it transaltes to i+1 in the array
