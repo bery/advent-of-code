@@ -2018,13 +2018,14 @@ func main() {
 		return array2[i] < array2[j]
 	})
 
+	occurences := make(map[int]int)
+	for _, val := range array2 {
+		occurences[val] = occurences[val] + 1
+	}
+
 	res := 0
-	for i, j := range array1 {
-		print(j, " ", array2[i], " ", j-array2[i], "\n")
-		diff := j - array2[i]
-		if diff < 0 {
-			diff = -diff
-		}
+	for _, j := range array1 {
+		diff := j * occurences[j]
 		res += diff
 	}
 
